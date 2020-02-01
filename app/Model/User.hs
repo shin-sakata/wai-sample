@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveAnyClass #-}
+
 module Model.User where
 
 import           Data.Aeson (FromJSON, ToJSON)
@@ -8,8 +10,4 @@ data User =
     { name :: Text
     , age  :: Int
     }
-  deriving (Generic, Show)
-
-instance ToJSON User
-
-instance FromJSON User
+  deriving (Generic, Show, FromJSON, ToJSON)
