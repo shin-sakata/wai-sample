@@ -1,5 +1,6 @@
 module Controller
   ( Action
+  , HasRequest
   , responseLBS
   , responseText
   , responseBuilder
@@ -40,11 +41,11 @@ type HasRequest a = RIO Request a
 
 type Action = RIO Request Response
 
-responseJson :: (FromJSON a, ToJSON a) => a -> Response
-responseJson json = responseLBS ok200 [("Content-Type", "application/json")] (encode json)
+responseJson :: (FromJSON a, ToJSON a) => a -> Action
+responseJson json = pure $ responseLBS ok200 [("Content-Type", "application/json; charset=utf-8")] (encode json)
 
-responseText :: Text -> Response
-responseText text = responseLBS ok200 [("Content-Type", "application/json; charset=utf-8")] (textToLBS text)
+responseText :: Text -> Action
+responseText text = pure $ responseLBS ok200 [("Content-Type", "text/plain; charset=utf-8")] (textToLBS text)
 
 textToLBS :: Text -> LByteString
 textToLBS = fromStrict . encodeUtf8

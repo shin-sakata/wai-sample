@@ -28,6 +28,7 @@ dependencies:
 - aeson
 - network
 - vault
+- text
 
 default-extensions:
 - DeriveGeneric
