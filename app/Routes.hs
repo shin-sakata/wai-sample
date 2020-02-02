@@ -5,9 +5,9 @@ module Routes
 import           Controller.TopController   (top)
 import           Controller.UsersController (user)
 import           RIO
-import           Router                     (Routes, get, post, routesWriter)
+import           Router2                    (Routes, get, int, match, text)
 
 routes :: Routes
 routes = do
-  get "/" top
-  get "/user" user
+  get (match "/") (const top)
+  get (match "/user/" >> int) user

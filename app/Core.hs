@@ -5,11 +5,11 @@ module Core
 import           Network.Wai              (Application)
 import           Network.Wai.Handler.Warp (run)
 import           RIO
-import           Router                   (Routes, router)
+import           Router2                  (Routes, router)
 
 app :: Routes -> Application
 app routes request respond = do
-  handler <- router request routes
+  handler <- runRIO request (router request routes)
   respond handler
 
 type Port = Int

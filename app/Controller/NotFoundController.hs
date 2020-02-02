@@ -4,11 +4,12 @@ module Controller.NotFoundController
 
 import           Controller
 import           Network.HTTP.Types
-import           Network.Wai        (Response, responseBuilder, responseLBS, Request)
+import           Network.Wai         (Request, Response, responseBuilder,
+                                      responseLBS)
 import           RIO
 import           RIO.ByteString.Lazy (fromStrict)
 
 notFound :: Action
 notFound = do
-  path <- fromStrict <$> rawPathInfo
+  path <- fromStrict <$> requestMethod <> rawPathInfo
   return $ responseLBS notFound404 [("Content-Type", "text/plain")] (path <> " is Not Found 404")
