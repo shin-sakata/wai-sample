@@ -2,9 +2,11 @@ module Controller
   ( Action
   , HasRequest
   , responseLBS
-  , responseText
+  , lbs
+  , maybeJson
+  , text
   , responseBuilder
-  , responseJson
+  , json
   , RequestBodyLength(..)
   , requestMethod
   , httpVersion
@@ -25,6 +27,7 @@ module Controller
   ) where
 
 import           Data.Aeson          (FromJSON, ToJSON, encode)
+import           Data.Maybe          (fromMaybe)
 import           Data.Vault.Lazy     (Vault)
 import           Network.HTTP.Types
 import           Network.Socket      (SockAddr)
@@ -41,11 +44,18 @@ type HasRequest a = RIO Request a
 
 type Action = RIO Request Response
 
-responseJson :: (FromJSON a, ToJSON a) => a -> Action
-responseJson json = pure $ responseLBS ok200 [("Content-Type", "application/json; charset=utf-8")] (encode json)
+lbs :: LByteString -> Action
+lbs bs = pure $ responseLBS ok200 [("Content-Type", "text/plain; charset=utf-8")] bs
 
-responseText :: Text -> Action
-responseText text = pure $ responseLBS ok200 [("Content-Type", "text/plain; charset=utf-8")] (textToLBS text)
+json :: (FromJSON a, ToJSON a) => a -> Action
+json json = pure $ responseLBS ok200 [("Content-Type", "application/json; charset=utf-8")] (encode json)
+
+maybeJson :: (FromJSON a, ToJSON a) => Maybe a -> Action
+maybeJson json =
+  pure $ responseLBS ok200 [("Content-Type", "application/json; charset=utf-8")] (maybe "null" encode json)
+
+text :: Text -> Action
+text text = pure $ responseLBS ok200 [("Content-Type", "text/plain; charset=utf-8")] (textToLBS text)
 
 textToLBS :: Text -> LByteString
 textToLBS = fromStrict . encodeUtf8

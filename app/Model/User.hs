@@ -2,7 +2,7 @@
 
 module Model.User where
 
-import           Data.Aeson (FromJSON, ToJSON)
+import           Data.Aeson (FromJSON, ToJSON, decode)
 import           RIO
 
 data User =
@@ -11,3 +11,6 @@ data User =
     , age  :: Int
     }
   deriving (Generic, Show, FromJSON, ToJSON)
+
+decodeUser :: LByteString -> Maybe User
+decodeUser = decode

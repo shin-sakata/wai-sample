@@ -1,4 +1,12 @@
-module Router2 where
+module Router2
+  ( get
+  , post
+  , int
+  , match
+  , text
+  , router
+  , Routes
+  ) where
 
 import           Controller                    (Action)
 import           Controller.NotFoundController (notFound)
@@ -23,8 +31,14 @@ router req routes = do
     Left action -> action
 
 get :: Parser a -> (a -> Action) -> Routes
-get pathParser action = do
-  let parser = match "GET" >> action <$> pathParser
+get = methodPathParser "GET"
+
+post :: Parser a -> (a -> Action) -> Routes
+post = methodPathParser "POST"
+
+methodPathParser :: Text -> Parser a -> (a -> Action) -> Routes
+methodPathParser method pathParser action = do
+  let parser = match method >> action <$> pathParser
   route <- ask
   lift $
     case parse parser route `feed` "" of
