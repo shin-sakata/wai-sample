@@ -1,5 +1,6 @@
 module Controller.UsersController
   ( user
+  , createUser
   ) where
 
 import           Controller
@@ -21,3 +22,6 @@ getQuery key = join <$> (lookup key <$> queryString)
 
 users :: IO [User]
 users = return [User "noname" 20, User "らむだ ファンタろう" 24, User "無職 やめたろう" 40]
+
+createUser :: (Text, Int) -> Action
+createUser (name, id) = responseJson $ User name id
