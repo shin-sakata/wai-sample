@@ -6,6 +6,9 @@ module Router2
   , text
   , router
   , Routes
+  , (</>)
+  , (</)
+  , (/>)
   ) where
 
 import           Controller                    (Action)

@@ -18,18 +18,12 @@ user id = do
   json user
 
 
-{-|
-  curl "Content-Type: application/json" -d '{"name":"chemirea", "age": 20}' localhost:8080/user/echo
-  >> {"age":20,"name":"chemirea"}
--}
-echoUser :: Action
-echoUser = do
-  maybeUser <- decodeUser <$> (fromStrict <$> requestBodyChunk)
-  maybeJson maybeUser
+echoUser :: (Text, Int) -> Action
+echoUser (name, age) = json $ User name age
 
 
 getQuery :: ByteString -> HasRequest (Maybe ByteString)
 getQuery key = join <$> (lookup key <$> queryString)
 
 users :: IO [User]
-users = return [User "noname" 20, User "らむだ ファンタろう" 24, User "無職 やめたろう" 40]
+users = return [User "noname" 20, User "ほげ　太郎" 24, User "ふが　花子" 40]
